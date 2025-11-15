@@ -127,7 +127,7 @@ function Parser(recipe: string): Recipe {
       }
       // initialize section
       tempSection = { 
-        name: line.substring(0, line.length), 
+        name: line.substring(3, line.length), 
         instructions: [], 
         ingredients: [],
         utensils: [],
