@@ -29,6 +29,7 @@ describe("split lines", () => {
 
     let result = Parser(recipe);
 
+    expect(result.instructions.length).toBe(3);
     expect(result.instructions[0]).toBe("Add eggs to a frying pan on low heat.");
     expect(result.instructions[1]).toBe("Cook for a minute or two.");
     expect(result.instructions[2]).toBe("Serve with toast.");
