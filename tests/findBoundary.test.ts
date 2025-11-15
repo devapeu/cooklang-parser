@@ -22,7 +22,7 @@ describe('findBoundary', () => {
     expect(findBoundary(1, line)).toBe(13);
   });
 
-    test('reads first match only', () => {
+  test('reads first match only when delimited by space', () => {
     let line = "@salt with @onions{3}";
     expect(findBoundary(1, line)).toBe(5);
   })

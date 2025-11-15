@@ -10,8 +10,19 @@ import { Recipe, Ingredient, BraceData, Section } from "./types";
 function findBoundary(pointer: number, line: string): number{ 
   let nextSpace = line.indexOf(" ", pointer + 1);
   let nextBrace = line.indexOf("{", pointer + 1);
+  let nextSigil = line.length;
 
-  if (nextBrace !== -1) {
+  while (pointer < line.length) {
+    if (['@', '#', '~'].includes(line[pointer])) {
+      nextSigil = pointer;
+      break;
+    }
+    pointer++
+  }
+
+  if (nextSpace > 0 && nextSigil < nextBrace) {
+    return nextSpace;
+  } else if (nextBrace !== -1) {
     // brace exists: stop at brace
     return nextBrace;
   } else if (nextSpace !== -1) {
