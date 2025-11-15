@@ -34,6 +34,6 @@ describe('findBoundary', () => {
 
   test('reads first match only with quantity, when it has spaces', () => {
     let line = "@green onions{3} and @garlic{2%cloves}";
-    expect(findBoundary(1, line)).toBe(7);
+    expect(findBoundary(1, line)).toBe(13);
   })
 })
