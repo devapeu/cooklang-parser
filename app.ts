@@ -1,31 +1,5 @@
 // Tokenizer
-
-type Ingredient = {
-  name: string,
-  measure: string | null,
-  quantity: number | null,
-}
-
-type Instruction = {
-  content: string,
-}
-
-type Recipe = {
-  ingredients: Ingredient[],
-  instructions: string[],
-}
-
-type Section = {
-  name: string,
-  ingredients: Ingredient[],
-  instructions: string[],
-  utensils: string[],
-}
-
-type BraceData = {
-  quantity: number | null,
-  measure: string | null,
-}
+import { Recipe, Ingredient, BraceData, Section } from "./types";
 
 /** 
  * For a given line from a specific pointer, find correct delimiter.
@@ -137,10 +111,12 @@ function Parser(recipe: string): Recipe {
       // this is an empty line, so we must push an instruction
 
       // if we are working with a temp section, push it there instead
-      if (tempSection !== null) tempSection.instructions.push(tempInstruction);
-      else instructions.push(tempInstruction);
+      if (tempInstruction !== "") {
+        if (tempSection !== null) tempSection.instructions.push(tempInstruction);
+        else instructions.push(tempInstruction);
+        tempInstruction = ""
+      }
 
-      tempInstruction = ""
     } else {
       // we must check what ingredients, utensils or times are in this line
       // push them to the recipe and also format them nicely
@@ -234,15 +210,14 @@ function Parser(recipe: string): Recipe {
   }
 
   // flush last instruction we had in memory
-  if (tempSection !== null) tempSection.instructions.push(tempInstruction);
-  else instructions.push(tempInstruction);
-  tempInstruction = ""
+  if (tempInstruction !== "") {
+    if (tempSection !== null) tempSection.instructions.push(tempInstruction);
+    else instructions.push(tempInstruction);
+    tempInstruction = ""
+  }
 
   // flush last section left in memory
   if (tempSection !== null) sections.push(tempSection);
-
-  // filter empty instruction lines due to unexpected spaces in recipe string sometimes
-  instructions = instructions.filter(i => i !== "");
 
   return {
     ingredients,
