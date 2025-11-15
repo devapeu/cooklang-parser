@@ -36,6 +36,30 @@ describe("split lines", () => {
   })
 })
 
+describe("parse sections", () => {
+  test("should write sections to object", () => {
+    const recipe =
+    `>> Dough
+
+    Mix flour, eggs and salt into a bowl.
+
+    Knead for 10 minutes.
+
+    Let it rest.
+    
+    >> Filling
+
+    Cook onions and garlic in a frying pan.
+
+    Add ground beef.
+
+    Season with salt, cumin and oregano.
+    `
+
+    console.dir(Parser(recipe));
+  })
+})
+
 describe("ignore comments", () => {
   test('should skip lines that start with --', () => {
     const recipe = 
