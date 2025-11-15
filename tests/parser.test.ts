@@ -4,11 +4,11 @@ import { Parser } from "../app";
 describe("split lines", () => {
   test("should save a split line as a single instruction sentence", () => {
     const recipe = `
-    Cook some fresh eggs on
-    a cast iron skillet with hot oil
+    Cook some eggs on a
+    cast iron skillet with hot oil
     for a minute or two.
     `
-    expect(Parser(recipe).instructions[0]).toBe("Cook some fresh eggs on a cast iron skillet with hot oil for a minute or two.");
+    expect(Parser(recipe).instructions[0]).toBe("Cook some eggs on a cast iron skillet with hot oil for a minute or two.");
   })
 
   test("should split lines without leading space", () => {
