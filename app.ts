@@ -73,11 +73,11 @@ function parseBraces(nextBrace: number, line:string) : BraceData | null {
 }
 
 function Parser(recipe: string): Recipe {
-  let sections = [];
+  let sections : Section[] = [];
 
-  let ingredients = [];
-  let utensils = [];
-  let instructions = [];
+  let ingredients: Ingredient[] = [];
+  let utensils: string[] = [];
+  let instructions: string[] = [];
 
   const lines: string[] = recipe.split("\n").map(l => l.trim());
 
@@ -223,7 +223,8 @@ function Parser(recipe: string): Recipe {
     ingredients,
     instructions,
     sections,
-  } as Recipe;
+    utensils,
+  };
 }
 
 export { findBoundary, parseBraces, Parser }

@@ -58,7 +58,7 @@ describe("parse sections", () => {
     `
 
     let result = Parser(recipe);
-    let sections: Section[] = result.sections;
+    let sections = result.sections as Section[];
     
     expect(Array.isArray(sections)).toBe(true);
     expect(sections?.length).toBe(2);
