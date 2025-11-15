@@ -167,13 +167,14 @@ function Parser(recipe: string): Recipe {
               quantity = braceContents.quantity;
               measure = braceContents.measure;
             }
+            // extract name from inbetween the sigil and the boundary
+            name = line.substring(pointer + 1, boundary);
+            // set the boundary to the next position of the closing brace
+            boundary = line.indexOf("}", nextBrace + 1);
+          } else {
+            // grab the name too but without changing the boundary
+            name = line.substring(pointer + 1, boundary);
           }
-
-          // extract name from inbetween the sigil and the boundary
-          name = line.substring(pointer + 1, boundary);
-
-          // set boundary to the position of the closing brace
-          boundary = line.indexOf("}", nextBrace + 1);
 
           // check for sigils
           if (ch === "@") {            
@@ -185,7 +186,7 @@ function Parser(recipe: string): Recipe {
             } else if (quantity !== null) {
               ingredientString = `${quantity} ${name}`;
             } else {
-              ingredientString = name;
+              ingredientString = name + " ";
             }
 
             formattedInstruction += ingredientString;
