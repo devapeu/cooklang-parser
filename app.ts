@@ -226,8 +226,10 @@ function Parser(recipe: string): Recipe {
         }
 
       }
-      
-      tempInstruction += formattedInstruction;
+
+      // add formatted instruction to temp instruction value
+      // if the instruction has some text already, add space inbetween to prevent joint words
+      tempInstruction += (tempInstruction.length > 0 ? " " : "") + formattedInstruction;
     }
   }
 
