@@ -238,6 +238,9 @@ function Parser(recipe: string): Recipe {
   else instructions.push(tempInstruction);
   tempInstruction = ""
 
+  // flush last section left in memory
+  if (tempSection !== null) sections.push(tempSection);
+
   // filter empty instruction lines due to unexpected spaces in recipe string sometimes
   instructions = instructions.filter(i => i !== "");
 
