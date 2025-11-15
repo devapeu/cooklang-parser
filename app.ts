@@ -105,14 +105,14 @@ function Parser(recipe: string): Recipe {
   let utensils = [];
   let instructions = [];
 
-  const lines: string[] = recipe.split("\n");
+  const lines: string[] = recipe.split("\n").map(l => l.trim());
 
   let tempMeta = null;
   let tempSection : Section | null = null;
   let tempInstruction: string = "";
 
   for (let i = 0; i < lines.length; i++) {
-    let line = lines[i]
+    let line = lines[i];
     let chunk = line.slice(0, 3);
 
     if (chunk === "-- ") {
@@ -227,9 +227,17 @@ function Parser(recipe: string): Recipe {
 
       }
       
-      tempInstruction += " " + formattedInstruction;
+      tempInstruction += formattedInstruction;
     }
   }
+
+  // flush last instruction we had in memory
+  if (tempSection !== null) tempSection.instructions.push(tempInstruction);
+  else instructions.push(tempInstruction);
+  tempInstruction = ""
+
+  // filter empty instruction lines due to unexpected spaces in recipe string sometimes
+  instructions = instructions.filter(i => i !== "");
 
   return {
     ingredients,
