@@ -1,5 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { Parser } from "../app";
+import { Section } from "../types";
 
 describe("split lines", () => {
   test("should save a split line as a single instruction sentence", () => {
@@ -56,7 +57,13 @@ describe("parse sections", () => {
     Season with salt, cumin and oregano.
     `
 
-    console.dir(Parser(recipe));
+    let result = Parser(recipe);
+    let sections: Section[] = result.sections;
+    
+    expect(Array.isArray(sections)).toBe(true);
+    expect(sections?.length).toBe(2);
+    expect(sections[0].name).toBe("Dough");
+    expect(sections[1].name).toBe("Filling");
   })
 })
 
