@@ -99,14 +99,11 @@ function parseBraces(nextBrace: number, line:string) : BraceData | null {
 }
 
 function Parser(recipe: string): Recipe {
-  let pointer = 0;
   let sections = [];
-  let atLineStart = false;
 
   let ingredients = [];
   let utensils = [];
   let instructions = [];
-  let time = 0;
 
   const lines: string[] = recipe.split("\n");
 
