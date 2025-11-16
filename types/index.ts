@@ -6,6 +6,7 @@ type Ingredient = {
 }
 
 type Recipe = {
+  meta: any,
   ingredients: Ingredient[],
   instructions: string[],
   utensils: string[],

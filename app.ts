@@ -241,6 +241,7 @@ function Parser(recipe: string): Recipe {
   if (tempSection !== null) sections.push(tempSection);
 
   return {
+    meta: {},
     ingredients,
     instructions,
     sections,
