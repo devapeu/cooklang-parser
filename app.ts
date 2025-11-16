@@ -88,6 +88,23 @@ function parseBraces(nextBrace: number, line:string) : BraceData | null {
   return output;
 }
 
+/**
+ * Formats an ingredient to a readable string of text
+ * @param name: the name of the ingredient, e.g. "flour"
+ * @param quantity e.g. "4"
+ * @param measure the unit of measure, e.g. "cups"
+ * @returns {string}
+ */
+function formatIngredient(name: string, quantity: number | null, measure: string | null): string {
+  // format ingredient instruction into recipe wording
+  if (measure !== null) {
+    return `${quantity} ${measure} of ${name}`;
+  } else if (quantity !== null) {
+    return `${quantity} ${name}`;
+  }
+  return name + " ";
+}
+
 function Parser(recipe: string): Recipe {
   let sections : Section[] = [];
 
@@ -191,18 +208,8 @@ function Parser(recipe: string): Recipe {
 
           // check for sigils
           if (ch === "@") {            
-            // format ingredient instruction into recipe wording
-            let ingredientString = '';
-
-            if (measure !== null) {
-              ingredientString = `${quantity} ${measure} of ${name}`;
-            } else if (quantity !== null) {
-              ingredientString = `${quantity} ${name}`;
-            } else {
-              ingredientString = name + " ";
-            }
-
-            formattedInstruction += ingredientString;
+            // format readable ingredient string
+            formattedInstruction += formatIngredient(name, quantity, measure);
 
             // Configure ingredient object to pass to either section, if applicable, or recipe root 
             let newIngredient: Ingredient = { name, quantity, measure, note }
