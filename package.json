@@ -1,5 +1,5 @@
 {
-  "name": "cooklang-parser",
+  "name": "@devapeu/cooklang-parser",
   "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
