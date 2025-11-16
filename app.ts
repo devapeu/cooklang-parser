@@ -67,6 +67,15 @@ function findValues(pointer: number, line: string): [Ingredient, number] {
     name = line.substring(pointer + 1, boundary);
   }
 
+  let openingParentheses = line.indexOf("(", boundary);
+  let closingParentheses = line.indexOf(")", openingParentheses);
+
+  if (openingParentheses === boundary + 1 && closingParentheses > 0) {
+    note = line.substring(openingParentheses + 1, closingParentheses);
+    boundary = closingParentheses;
+  }
+
+
   return [{ name, quantity, measure, note }, boundary]
 }
 
@@ -201,14 +210,6 @@ function Parser(recipe: string): Recipe {
           // if we found "{", then we need to look for the next "}"
 
           let [data, boundary] = findValues(pointer, line);
-
-          let openingParentheses = line.indexOf("(", boundary);
-          let closingParentheses = line.indexOf(")", openingParentheses);
-
-          if (openingParentheses === boundary + 1 && closingParentheses > 0) {
-            data.note = line.substring(openingParentheses + 1, closingParentheses);
-            boundary = closingParentheses;
-          }
 
           // check for sigils
           if (ch === "@") {            
