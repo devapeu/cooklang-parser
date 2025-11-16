@@ -124,6 +124,13 @@ describe("parse ingredients", () => {
     const recipe = `Add @green onions{2%stalks}(chopped and diced)`;
     expect(Parser(recipe).ingredients[0].note).toBe("chopped and diced");
   });
+
+  test("should not skip ahead when () are present", () => {
+    const recipe = `Add @salt{1%tsp} to the boiling water (just a little bit).`;
+    let result = Parser(recipe);
+    expect(result.ingredients[0].note).toBeNull();
+    expect(result.instructions[0]).toBe("Add 1 tsp of salt to the boiling water (just a little bit).")
+  });
 })
 
 describe("ignore comments", () => {

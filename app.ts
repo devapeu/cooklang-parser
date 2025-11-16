@@ -184,7 +184,7 @@ function Parser(recipe: string): Recipe {
           let openingParentheses = line.indexOf("(", boundary);
           let closingParentheses = line.indexOf(")", openingParentheses);
 
-          if (openingParentheses > 0 && closingParentheses > 0) {
+          if (openingParentheses === boundary + 1 && closingParentheses > 0) {
             note = line.substring(openingParentheses + 1, closingParentheses);
             boundary = closingParentheses;
           }
