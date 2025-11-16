@@ -109,7 +109,7 @@ function Parser(recipe: string): Recipe {
       continue; // this is a comment so we skip it
     } else if (chunk === "---") {
       // this is the metadata block
-    } else if (chunk === ">> ") {
+    } else if (chunk === "== ") {
 
       // if there is a section and we hit another one, push it
       if (tempSection !== null) {

@@ -40,7 +40,7 @@ describe("split lines", () => {
 describe("parse sections", () => {
   test("should write sections to object", () => {
     const recipe =
-    `>> Dough
+    `== Dough
 
     Mix flour, eggs and salt into a bowl.
 
@@ -48,7 +48,7 @@ describe("parse sections", () => {
 
     Let it rest.
     
-    >> Filling
+    == Filling
 
     Cook onions and garlic in a frying pan.
 
@@ -68,7 +68,7 @@ describe("parse sections", () => {
 
   test("should parse ingredients data in sections", () => {
     const recipe =`
-    >> Filling
+    == Filling
     Mix and knead @flour{2%cups}, @eggs{2} and @butter in a bowl.
     `
 
@@ -91,12 +91,12 @@ describe("parse sections", () => {
   
   test("should include ingredients in sections", () => {
     const recipe = `
-    >> Dough
+    == Dough
     Mix and knead @flour{4%cups} and @butter{90%grams} in a bowl.
 
     Let it rest in the fridge for 1 hour.
 
-    >> Filling
+    == Filling
     Fry @ground beef{500%grams} in hot @oil.
 
     Chop and add @onions{2}, cook until translucent.`
