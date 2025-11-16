@@ -1,5 +1,5 @@
 // Tokenizer
-import { Recipe, Ingredient, BraceData, Section } from "./types";
+import { Recipe, Ingredient, BraceData, Section } from "../types";
 
 /** 
  * For a given line from a specific pointer, find correct delimiter.
