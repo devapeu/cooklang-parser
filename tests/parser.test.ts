@@ -147,6 +147,4 @@ describe("ignore comments", () => {
     const recipe = `Add eggs to a frying pan on low heat. -- Or was it high heat?`
     expect(Parser(recipe).instructions[0]).toBe("Add eggs to a frying pan on low heat. ")
   });
-})
-  })
-})
+});
