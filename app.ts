@@ -39,6 +39,37 @@ function findBoundary(pointer: number, line: string): number{
   }
 }
 
+function findValues(pointer: number, line: string): [Ingredient, number] {
+  let name: string;
+  let quantity: number | null = null;
+  let measure: string | null = null;
+  let note: string | null = null;
+
+  // find "{" or " " to know where the ingredient name ends
+  let boundary = findBoundary(pointer, line);
+  // also check again for "{" to see if the brace is the delimiter
+  let nextBrace = line.indexOf("{", pointer + 1);
+
+  // if the brace is indeed the delimiter, then we need to find the matching pair
+  if (boundary === nextBrace) {
+    let braceContents = parseBraces(nextBrace, line);
+
+    if (braceContents !== null) {
+      quantity = braceContents.quantity;
+      measure = braceContents.measure;
+    }
+    // extract name from inbetween the sigil and the boundary
+    name = line.substring(pointer + 1, boundary);
+    // set the boundary to the next position of the closing brace
+    boundary = line.indexOf("}", nextBrace + 1);
+  } else {
+    // grab the name too but without changing the boundary
+    name = line.substring(pointer + 1, boundary);
+  }
+
+  return [{ name, quantity, measure, note }, boundary]
+}
+
 /**
  * For a given line with an opening brace,
  * finds matching pair and parses contents into measure and quantity.
@@ -90,19 +121,17 @@ function parseBraces(nextBrace: number, line:string) : BraceData | null {
 
 /**
  * Formats an ingredient to a readable string of text
- * @param name: the name of the ingredient, e.g. "flour"
- * @param quantity e.g. "4"
- * @param measure the unit of measure, e.g. "cups"
+ * @param {Ingredient} i
  * @returns {string}
  */
-function formatIngredient(name: string, quantity: number | null, measure: string | null): string {
+function formatIngredient(i: Ingredient): string {
   // format ingredient instruction into recipe wording
-  if (measure !== null) {
-    return `${quantity} ${measure} of ${name}`;
-  } else if (quantity !== null) {
-    return `${quantity} ${name}`;
+  if (i.measure !== null) {
+    return `${i.quantity} ${i.measure} of ${i.name}`;
+  } else if (i.quantity !== null) {
+    return `${i.quantity} ${i.name}`;
   }
-  return name + " ";
+  return i.name + " ";
 }
 
 function Parser(recipe: string): Recipe {
@@ -171,60 +200,35 @@ function Parser(recipe: string): Recipe {
           // if we found  " ", then we got all we need
           // if we found "{", then we need to look for the next "}"
 
-          let name: string;
-          let quantity: number | null = null;
-          let measure: string | null = null;
-          let note: string | null = null;
-
-          // find "{" or " " to know where the ingredient name ends
-          let boundary = findBoundary(pointer, line);
-          // also check again for "{" to see if the brace is the delimiter
-          let nextBrace = line.indexOf("{", pointer + 1);
-
-          // if the brace is indeed the delimiter, then we need to find the matching pair
-          if (boundary === nextBrace) {
-            let braceContents = parseBraces(nextBrace, line);
-
-            if (braceContents !== null) {
-              quantity = braceContents.quantity;
-              measure = braceContents.measure;
-            }
-            // extract name from inbetween the sigil and the boundary
-            name = line.substring(pointer + 1, boundary);
-            // set the boundary to the next position of the closing brace
-            boundary = line.indexOf("}", nextBrace + 1);
-          } else {
-            // grab the name too but without changing the boundary
-            name = line.substring(pointer + 1, boundary);
-          }
+          let [data, boundary] = findValues(pointer, line);
 
           let openingParentheses = line.indexOf("(", boundary);
           let closingParentheses = line.indexOf(")", openingParentheses);
 
           if (openingParentheses === boundary + 1 && closingParentheses > 0) {
-            note = line.substring(openingParentheses + 1, closingParentheses);
+            data.note = line.substring(openingParentheses + 1, closingParentheses);
             boundary = closingParentheses;
           }
 
           // check for sigils
           if (ch === "@") {            
             // format readable ingredient string
-            formattedInstruction += formatIngredient(name, quantity, measure);
+            formattedInstruction += formatIngredient(data);
 
             // Configure ingredient object to pass to either section, if applicable, or recipe root 
-            let newIngredient: Ingredient = { name, quantity, measure, note }
+            let newIngredient: Ingredient = { ...data }
             if (tempSection !== null) tempSection.ingredients.push(newIngredient);
             else ingredients.push(newIngredient);
             
           } else if (ch === "#") {
             formattedInstruction += name;
 
-            if (tempSection !== null) tempSection.utensils.push(name);
-            else utensils.push(name);
+            if (tempSection !== null) tempSection.utensils.push(data.name);
+            else utensils.push(data.name);
 
           } else if (ch === "~") {
-            if (measure !== null) {
-              formattedInstruction += `${quantity} ${measure}`
+            if (data.measure !== null) {
+              formattedInstruction += `${data.quantity} ${data.measure}`
             }
           }
 
