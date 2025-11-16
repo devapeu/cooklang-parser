@@ -187,7 +187,7 @@ function Parser(recipe: string): Recipe {
             let ingredientString = '';
 
             if (measure !== null) {
-              ingredientString = `${quantity} + ${measure} of ${name}`;
+              ingredientString = `${quantity} ${measure} of ${name}`;
             } else if (quantity !== null) {
               ingredientString = `${quantity} ${name}`;
             } else {
