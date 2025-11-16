@@ -202,11 +202,15 @@ function Parser(recipe: string): Recipe {
             else ingredients.push(newIngredient);
             
           } else if (ch === "#") {
+            formattedInstruction += name;
+
             if (tempSection !== null) tempSection.utensils.push(name);
             else utensils.push(name);
 
           } else if (ch === "~") {
-            // idk what to do here lol
+            if (measure !== null) {
+              formattedInstruction += `${quantity} ${measure}`
+            }
           }
 
           pointer = boundary + 1;
