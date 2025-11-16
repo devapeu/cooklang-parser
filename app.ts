@@ -221,7 +221,7 @@ function Parser(recipe: string): Recipe {
             else ingredients.push(newIngredient);
             
           } else if (ch === "#") {
-            formattedInstruction += name;
+            formattedInstruction += data.name;
 
             if (tempSection !== null) tempSection.utensils.push(data.name);
             else utensils.push(data.name);
