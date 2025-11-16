@@ -39,8 +39,10 @@ describe("split lines", () => {
 
 describe("parse sections", () => {
   test("should write sections to object", () => {
+    // Section titles only need == at the beginning, per the Cooklang spec
+    // == at the end of the section name is purely visual and should be ignored
     const recipe =
-    `== Dough
+    `== Dough ==
 
     Mix flour, eggs and salt into a bowl.
 
@@ -48,7 +50,7 @@ describe("parse sections", () => {
 
     Let it rest.
     
-    == Filling
+    = Filling
 
     Cook onions and garlic in a frying pan.
 

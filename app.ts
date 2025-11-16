@@ -105,27 +105,26 @@ function Parser(recipe: string): Recipe {
     let line = lines[i];
     let chunk = line.slice(0, 3);
 
-    if (chunk === "-- ") {
-      continue; // this is a comment so we skip it
-    } else if (chunk === "---") {
-      // this is the metadata block
-    } else if (chunk === "== ") {
+    if (chunk === "-- ") { // this is a comment so we skip it
+      continue; 
+    } else if (chunk === "---") { // this is the metadata block
+      // TODO add meta data logic
+    } else if (chunk[0] === "=") { // this is a section
 
       // if there is a section and we hit another one, push it
       if (tempSection !== null) {
         sections.push(tempSection);
       }
+
       // initialize section
       tempSection = { 
-        name: line.substring(3, line.length), 
+        name: line.split("").filter(ch => ch !== "=").join("").trim(), 
         instructions: [], 
         ingredients: [],
         utensils: [],
       };
 
-    } else if (line.trim() === "") {
-      // this is an empty line, so we must push an instruction
-
+    } else if (line.trim() === "") { // this is an empty line, so we must push an instruction
       // if we are working with a temp section, push it there instead
       if (tempInstruction !== "") {
         if (tempSection !== null) tempSection.instructions.push(tempInstruction);
