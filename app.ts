@@ -158,6 +158,7 @@ function Parser(recipe: string): Recipe {
           let name: string;
           let quantity: number | null = null;
           let measure: string | null = null;
+          let note: string | null = null;
 
           // find "{" or " " to know where the ingredient name ends
           let boundary = findBoundary(pointer, line);
@@ -181,6 +182,14 @@ function Parser(recipe: string): Recipe {
             name = line.substring(pointer + 1, boundary);
           }
 
+          let openingParentheses = line.indexOf("(", boundary);
+          let closingParentheses = line.indexOf(")", openingParentheses);
+
+          if (openingParentheses > 0 && closingParentheses > 0) {
+            note = line.substring(openingParentheses + 1, closingParentheses);
+            boundary = closingParentheses;
+          }
+
           // check for sigils
           if (ch === "@") {            
             // format ingredient instruction into recipe wording
@@ -197,7 +206,7 @@ function Parser(recipe: string): Recipe {
             formattedInstruction += ingredientString;
 
             // Configure ingredient object to pass to either section, if applicable, or recipe root 
-            let newIngredient: Ingredient = { name, quantity, measure }
+            let newIngredient: Ingredient = { name, quantity, measure, note }
             if (tempSection !== null) tempSection.ingredients.push(newIngredient);
             else ingredients.push(newIngredient);
             

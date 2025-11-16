@@ -3,6 +3,7 @@ type Ingredient = {
   name: string,
   measure: string | null,
   quantity: number | null,
+  note: string | null,
 }
 
 type Recipe = {

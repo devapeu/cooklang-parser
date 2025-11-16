@@ -117,6 +117,11 @@ describe("parse ingredients", () => {
     let result = Parser(recipe);
     expect(result.ingredients.length).toBe(2);
   })
+
+  test("should include notes", () => {
+    const recipe = `Add @green onions{2%stalks}(chopped and diced)`;
+    expect(Parser(recipe).ingredients[0].note).toBe("chopped and diced");
+  });
 })
 
 describe("ignore comments", () => {
