@@ -118,7 +118,7 @@ function Parser(recipe: string): Recipe {
 
       // initialize section
       tempSection = { 
-        name: line.split("").filter(ch => ch !== "=").join("").trim(), 
+        name: line.replace(/=/g, '').trim(), 
         instructions: [], 
         ingredients: [],
         utensils: [],
