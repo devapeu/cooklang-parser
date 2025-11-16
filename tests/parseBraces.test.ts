@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { parseBraces } from "../app";
+import { parseBraces } from "../src/app";
 
 describe('parseBraces', () => {
   test('returns quantity and measure when both are defined', () => {

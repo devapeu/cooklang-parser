@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { Parser } from "../app";
+import { Parser } from "../src/app";
 import { Ingredient, Section } from "../types";
 
 describe("split lines", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { findBoundary } from "../app";
+import { findBoundary } from "../src/app";
 
 describe('findBoundary', () => {
   test('reads line until end of string', () => {
