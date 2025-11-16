@@ -141,10 +141,50 @@ describe("ignore comments", () => {
 
     expect(Parser(recipe).instructions[0]).toBe("Add eggs to a frying pan on low heat.")
 
-  });
+  })
 
   test('should skip rest of line with comment', () => {
     const recipe = `Add eggs to a frying pan on low heat. -- Or was it high heat?`
     expect(Parser(recipe).instructions[0]).toBe("Add eggs to a frying pan on low heat. ")
   });
+})
+
+describe("general recipe check", () => {
+  test('should parse the standard example', () => {
+    const recipe = `
+      Crack the @eggs{3}(any type) into a blender, then add the @flour{125%g},
+      @milk{250%ml} and @sea salt{1%pinch}, and blitz until smooth.
+
+      Pour into a #bowl and leave to stand for ~{15%minutes}.
+
+      Melt the @butter in a #large non-stick frying pan{} on
+      a medium heat, then tilt the pan so the butter coats the surface.
+
+      Pour in 1 ladle of batter and tilt again, so that the batter
+      spreads all over the base, then cook for 1 to 2 minutes,
+      or until it starts to come away from the sides.
+
+      Once golden underneath, flip the pancake over and cook for 1 further
+      minute, or until cooked through.
+
+      Serve straightaway with your favourite topping. -- Add your favorite
+      -- topping here to make sure it's included in your meal plan!
+    `
+
+    let result = Parser(recipe);
+
+    expect(result.ingredients[0].name).toBe("eggs");
+    expect(result.ingredients[0].quantity).toBe(3);
+    expect(result.ingredients[0].measure).toBeNull();
+    expect(result.ingredients[0].note).toBe("any type");
+
+    expect(result.ingredients[1].name).toBe("flour");
+    expect(result.ingredients[1].quantity).toBe(125);
+    expect(result.ingredients[1].measure).toBe("g");
+
+    expect(result.instructions[0]).toBe("Crack the 3 eggs into a blender, then add the 125 g of flour, 250 ml of milk and 1 pinch of sea salt, and blitz until smooth.")
+
+    expect(result.utensils[0]).toBe("bowl");
+    expect(result.utensils[1]).toBe("large non-stick frying pan");
+  })
 });
