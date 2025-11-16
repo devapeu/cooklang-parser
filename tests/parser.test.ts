@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { Parser } from "../app";
-import { Section } from "../types";
+import { Ingredient, Section } from "../types";
 
 describe("split lines", () => {
   test("should save a split line as a single instruction sentence", () => {
@@ -64,6 +64,58 @@ describe("parse sections", () => {
     expect(sections?.length).toBe(2);
     expect(sections[0].name).toBe("Dough");
     expect(sections[1].name).toBe("Filling");
+  })
+
+  test("should parse ingredients data in sections", () => {
+    const recipe =`
+    >> Filling
+    Mix and knead @flour{2%cups}, @eggs{2} and @butter in a bowl.
+    `
+
+    let result: any = Parser(recipe);
+    let ingredients = result.sections[0].ingredients;
+
+    expect(ingredients[0].name).toBe("flour");
+    expect(ingredients[0].quantity).toBe(2);
+    expect(ingredients[0].measure).toBe("cups");
+
+    expect(ingredients[1].name).toBe("eggs");
+    expect(ingredients[1].quantity).toBe(2);
+    expect(ingredients[1].measure).toBeNull();
+
+    expect(ingredients[2].name).toBe("butter");
+    expect(ingredients[2].quantity).toBeNull();
+    expect(ingredients[2].measure).toBeNull();
+  })
+
+  
+  test("should include ingredients in sections", () => {
+    const recipe = `
+    >> Dough
+    Mix and knead @flour{4%cups} and @butter{90%grams} in a bowl.
+
+    Let it rest in the fridge for 1 hour.
+
+    >> Filling
+    Fry @ground beef{500%grams} in hot @oil.
+
+    Chop and add @onions{2}, cook until translucent.`
+
+    let result = Parser(recipe);
+
+    let sections = result.sections as Section[];
+    
+    expect(sections[0].ingredients.length).toBe(2);
+    expect(sections[1].ingredients.length).toBe(3);
+  });
+})
+
+describe("parse ingredients", () => {
+  test("should include ingredients", () => {
+    const recipe = `Pour @oil in a frying pan, then add @eggs{2}.`
+
+    let result = Parser(recipe);
+    expect(result.ingredients.length).toBe(2);
   })
 })
 
