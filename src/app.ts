@@ -2,6 +2,28 @@ import { Recipe, Ingredient, Section } from "../types";
 import { findValues } from "./helpers/findValues";
 import { formatIngredient } from "./helpers/formatIngredient";
 
+/**
+ * Pushes a Section object into a Section array.
+ * @param temp
+ * @param array 
+ */
+function flushSection(temp: Section | null, array: Section[]): void {
+  if (temp !== null) array.push(temp);
+}
+
+/**
+ * Checks if a instruction exists, then, whether to push it to an ongoing section or the base ingredient list.
+ * @param tempInstruction 
+ * @param tempSection 
+ * @param ingredients 
+ */
+function flushInstruction(tempInstruction: string, tempSection: Section | null, ingredients: string[]): void {
+  if (!tempInstruction) return;
+
+  if (tempSection) tempSection.instructions.push(tempInstruction);
+  else ingredients.push(tempInstruction);
+}
+
 function Parser(recipe: string): Recipe {
   let sections : Section[] = [];
 
@@ -26,9 +48,7 @@ function Parser(recipe: string): Recipe {
     } else if (chunk[0] === "=") { // this is a section
 
       // if there is a section and we hit another one, push it
-      if (tempSection !== null) {
-        sections.push(tempSection);
-      }
+      flushSection(tempSection, sections);
 
       // initialize section
       tempSection = { 
@@ -40,12 +60,9 @@ function Parser(recipe: string): Recipe {
 
     } else if (line.trim() === "") { // this is an empty line, so we must push an instruction
       // if we are working with a temp section, push it there instead
-      if (tempInstruction !== "") {
-        if (tempSection !== null) tempSection.instructions.push(tempInstruction);
-        else instructions.push(tempInstruction);
-        tempInstruction = ""
-      }
-
+      flushInstruction(tempInstruction, tempSection, instructions);
+      tempInstruction = ""
+      
     } else {
       // we must check what ingredients, utensils or times are in this line
       // push them to the recipe and also format them nicely
@@ -59,15 +76,11 @@ function Parser(recipe: string): Recipe {
         let ch = line[pointer];
 
         // inline comment, quit parsing this line
-        if (ch === "-" && line[pointer + 1] === "-") {
-          break;
-        }
+        if (ch === "-" && line[pointer + 1] === "-") break;
 
         if (['@', '#', '~'].includes(ch)) {
-          // read until a " " or a "{" is hit
-          // if we found  " ", then we got all we need
-          // if we found "{", then we need to look for the next "}"
-
+          // find the name, quantity, measure, notes; 
+          // also the boundary to know what position to skip to
           let [data, boundary] = findValues(pointer, line);
 
           // check for sigils
@@ -76,9 +89,8 @@ function Parser(recipe: string): Recipe {
             formattedInstruction += formatIngredient(data);
 
             // Configure ingredient object to pass to either section, if applicable, or recipe root 
-            let newIngredient: Ingredient = { ...data }
-            if (tempSection !== null) tempSection.ingredients.push(newIngredient);
-            else ingredients.push(newIngredient);
+            if (tempSection !== null) tempSection.ingredients.push({ ...data });
+            else ingredients.push({ ...data });
             
           } else if (ch === "#") {
             formattedInstruction += data.name;
@@ -110,14 +122,11 @@ function Parser(recipe: string): Recipe {
   }
 
   // flush last instruction we had in memory
-  if (tempInstruction !== "") {
-    if (tempSection !== null) tempSection.instructions.push(tempInstruction);
-    else instructions.push(tempInstruction);
-    tempInstruction = ""
-  }
+  flushInstruction(tempInstruction, tempSection, instructions);
+  tempInstruction = ""
 
   // flush last section left in memory
-  if (tempSection !== null) sections.push(tempSection);
+  flushSection(tempSection, sections);
 
   return {
     meta: {},
