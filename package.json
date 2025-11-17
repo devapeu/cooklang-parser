@@ -6,7 +6,7 @@
   "files": ["dist"],
   "scripts": {
     "test": "jest",
-    "build": "esbuild src/index.ts --bundle --outfile=dist/index.js"
+    "build": "esbuild src/index.ts --bundle --outfile=dist/index.js --format=esm"
   },
   "author": "",
   "license": "ISC",
