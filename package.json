@@ -1,9 +1,11 @@
 {
   "name": "@devapeu/cooklang-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "dist/index.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "jest",
     "build": "esbuild src/index.ts --bundle --outfile=dist/index.js --format=esm"
