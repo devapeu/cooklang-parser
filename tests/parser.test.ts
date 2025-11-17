@@ -149,6 +149,36 @@ describe("ignore comments", () => {
   });
 })
 
+describe("metadata with >>", () => {
+  test('should parse metadata', () => {
+    const recipe = `
+    >> servings: 2
+    >> name: Fried Egg
+
+    Add @eggs{2} to a #frying pan{}.
+    `;
+
+    let result = Parser(recipe);
+
+    expect(result.meta.servings).toBe("2");
+    expect(result.meta.name).toBe("Fried Egg");
+  });
+
+  test('should skip bad lines', () => {
+    const recipe = `
+    >> servings:
+    >> : 90 minutes
+    >> description: it's a nice recipe, sir.
+    `
+
+    let result = Parser(recipe);
+
+    expect(result.meta.servings).toBeUndefined();
+    expect(result.meta.description).toBe("it's a nice recipe, sir.");
+    expect(Object.keys(result.meta).length).toBe(1);
+  })
+});
+
 describe("general recipe check", () => {
   test('should parse the standard example', () => {
     const recipe = `
@@ -186,5 +216,5 @@ describe("general recipe check", () => {
 
     expect(result.utensils[0]).toBe("bowl");
     expect(result.utensils[1]).toBe("large non-stick frying pan");
-  })
+  });
 });

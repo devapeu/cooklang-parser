@@ -12,7 +12,7 @@ function Parser(recipe: string): Recipe {
 
   const lines: string[] = recipe.split("\n").map(l => l.trim());
 
-  let tempMeta = null;
+  let tempMeta: any = {};
   let tempSection : Section | null = null;
   let tempInstruction: string = "";
 
@@ -22,8 +22,16 @@ function Parser(recipe: string): Recipe {
 
     if (chunk === "-- ") { // this is a comment so we skip it
       continue; 
-    } else if (chunk === "---") { // this is the metadata block
-      // TODO add meta data logic
+    } else if (chunk === "---") { // this is the metadata block YAML style
+      // TODO: Add parsing for this block.
+      // Custom YAML parser or just import yaml?
+    } else if (chunk === ">> ") { // this is a metadata key value pair
+      let [key, value] = line.slice(3, line.length).split(":").map(x => x.trim());
+
+      if (!key || !value) continue;
+
+      tempMeta[key] = value;
+
     } else if (chunk[0] === "=") { // this is a section
 
       // if there is a section and we hit another one, push it
@@ -108,7 +116,7 @@ function Parser(recipe: string): Recipe {
   flushSection(tempSection, sections);
 
   return {
-    meta: {},
+    meta: tempMeta,
     ingredients,
     instructions,
     sections,
