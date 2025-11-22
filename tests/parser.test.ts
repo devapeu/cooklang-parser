@@ -138,6 +138,13 @@ describe("parse ingredients", () => {
     expect(result.ingredients[0].name).toBe("flour");
     expect(result.instructions[0]).toBe(`Add <span>2 cups of flour</span> to the mix.`)
   });
+
+  test("should mark ingredients as optional", () => {
+    const recipe = `Add @*black olives{} to garnish.`
+    let result = Parser(recipe);
+    expect(result.ingredients[0].name).toBe("black olives");
+    expect(result.ingredients[0].optional).toBe(true);
+  })
 })
 
 describe("ignore comments", () => {

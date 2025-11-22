@@ -8,6 +8,7 @@ function findValues(pointer: number, line: string): [Ingredient, number] {
   let quantity: number | null = null;
   let measure: string | null = null;
   let note: string | null = null;
+  let optional: boolean = false;
 
   // find "{" or " " to know where the ingredient name ends
   let boundary = findBoundary(pointer, line);
@@ -31,6 +32,11 @@ function findValues(pointer: number, line: string): [Ingredient, number] {
     name = line.substring(pointer + 1, boundary);
   }
 
+  if (name[0] === "*") {
+    optional = true;
+    name = name.slice(1)
+  }
+
   let openingParentheses = line.indexOf("(", boundary);
   let closingParentheses = line.indexOf(")", openingParentheses);
 
@@ -40,7 +46,7 @@ function findValues(pointer: number, line: string): [Ingredient, number] {
   }
 
 
-  return [{ name, quantity, measure, note }, boundary]
+  return [{ name, quantity, measure, note, optional }, boundary]
 }
 
 export { findValues }
