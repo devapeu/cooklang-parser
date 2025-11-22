@@ -131,6 +131,13 @@ describe("parse ingredients", () => {
     expect(result.ingredients[0].note).toBeNull();
     expect(result.instructions[0]).toBe("Add 1 tsp of salt to the boiling water (just a little bit).")
   });
+
+  test("should add tags when those are defined", () => {
+    const recipe = `Add @flour{2%cups} to the mix.`
+    let result = Parser(recipe, { ingredientTag: 'span' });
+    expect(result.ingredients[0].name).toBe("flour");
+    expect(result.instructions[0]).toBe(`Add <span>2 cups of flour</span> to the mix.`)
+  });
 })
 
 describe("ignore comments", () => {

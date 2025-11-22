@@ -3,7 +3,11 @@ import { findValues } from "./helpers/findValues";
 import { formatIngredient } from "./helpers/formatIngredient";
 import { flushSection, flushInstruction } from "./helpers/flushers"
 
-function Parser(recipe: string): Recipe {
+interface ParserOptions {
+  ingredientTag: string,
+}
+
+function Parser(recipe: string, options?: ParserOptions): Recipe {
   let sections : Section[] = [];
 
   let ingredients: Ingredient[] = [];
@@ -73,7 +77,7 @@ function Parser(recipe: string): Recipe {
           // check for sigils
           if (ch === "@") {            
             // format readable ingredient string
-            formattedInstruction += formatIngredient(data);
+            formattedInstruction += formatIngredient(data, options?.ingredientTag);
 
             // Configure ingredient object to pass to either section, if applicable, or recipe root 
             if (tempSection !== null) tempSection.ingredients.push({ ...data });

@@ -5,14 +5,20 @@ import { Ingredient } from "../../types";
  * @param {Ingredient} i
  * @returns {string}
  */
-function formatIngredient(i: Ingredient): string {
+function formatIngredient(i: Ingredient, ingredientTag?: string): string {
   // format ingredient instruction into recipe wording
+  let output = "";
   if (i.measure !== null) {
-    return `${i.quantity} ${i.measure} of ${i.name}`;
+    output = `${i.quantity} ${i.measure} of ${i.name}`;
   } else if (i.quantity !== null) {
-    return `${i.quantity} ${i.name}`;
+    output = `${i.quantity} ${i.name}`;
+  } else {
+    output = i.name + " ";
   }
-  return i.name + " ";
+
+  if (typeof ingredientTag !== 'undefined') output = `<${ingredientTag}>${output}</${ingredientTag}>`
+
+  return output;
 }
 
 export { formatIngredient }
