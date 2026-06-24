@@ -38,4 +38,24 @@ describe('parseBraces', () => {
     expect(result?.quantity).toBeNull();
     expect(result?.measure).toBeNull();
   })
+
+  test('returns fraction string and measure for fraction quantity', () => {
+    let line = "@water{1/2%liters}";
+    let nextBrace = 6;
+
+    let result = parseBraces(nextBrace, line);
+
+    expect(result?.quantity).toBe("1/2");
+    expect(result?.measure).toBe("liters");
+  })
+
+  test('returns decimal number and measure for decimal quantity', () => {
+    let line = "@water{0.5%liters}";
+    let nextBrace = 6;
+
+    let result = parseBraces(nextBrace, line);
+
+    expect(result?.quantity).toBe(0.5);
+    expect(result?.measure).toBe("liters");
+  })
 });

@@ -2,7 +2,7 @@
 type Ingredient = {
   name: string,
   measure: string | null,
-  quantity: number | null,
+  quantity: number | string | null,
   note: string | null,
   optional: boolean,
 }
@@ -23,7 +23,7 @@ type Section = {
 }
 
 type BraceData = {
-  quantity: number | null,
+  quantity: number | string | null,
   measure: string | null,
 }
 

@@ -1,6 +1,18 @@
 
 import { BraceData } from "../../types";
 
+function parseQuantity(raw: string): number | string | null {
+  if (raw.includes("/")) {
+    const parts = raw.split("/");
+    if (parts.length === 2 && !isNaN(parseFloat(parts[0])) && !isNaN(parseFloat(parts[1])) && parseFloat(parts[1]) !== 0) {
+      return raw;
+    }
+    return null;
+  }
+  const n = parseFloat(raw);
+  return isNaN(n) ? null : n;
+}
+
 /**
  * For a given line with an opening brace,
  * finds matching pair and parses contents into measure and quantity.
@@ -30,15 +42,12 @@ function parseBraces(nextBrace: number, line:string) : BraceData | null {
     // e.g. @olive oil{}
     return output;
   } else {
-    let parsedQuantity = parseInt(value[0]);
+    let parsedQuantity = parseQuantity(value[0]);
 
-    // throw an error if the first value is not a number
-    // could have passed something like {three%cups}
-    if (isNaN(parsedQuantity)) {
+    if (parsedQuantity === null) {
       throw new Error(`Invalid quantity number at ${open + 1}.`);
     }
 
-    // if it passed, set the quantity
     output.quantity = parsedQuantity;
 
     // check if we have a measure, and save it

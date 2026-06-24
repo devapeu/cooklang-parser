@@ -5,7 +5,7 @@ import { parseBraces } from "./parseBraces";
 
 function findValues(pointer: number, line: string): [Ingredient, number] {
   let name: string;
-  let quantity: number | null = null;
+  let quantity: number | string | null = null;
   let measure: string | null = null;
   let note: string | null = null;
   let optional: boolean = false;
